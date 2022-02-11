@@ -1,8 +1,9 @@
+use dotenv;
 use std::collections::HashMap;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let API_KEY: String = String::from("api key removed");
+    let api_key = dotenv::var("API_KEY").expect("API_KEY is not set");
 
     let mut params = HashMap::new();
     params.insert("symbol", "BTC");
@@ -11,7 +12,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let resp = client
         .get("https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest")
-        .header("X-CMC_PRO_API_KEY", API_KEY)
+        .header("X-CMC_PRO_API_KEY", api_key)
         .query(&params)
         .send()
         .await?;
