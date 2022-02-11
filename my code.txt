@@ -60,15 +60,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .arg(
             Arg::new("currency_list")
                 .long("coins")
-                .short('c')
                 .min_values(1)
                 .required(true),
         )
         .get_matches();
 
     let currencies = matches.value_of("currency_list").expect("CMC key not set");
-
-    println!("currencies: {:?}", currencies);
 
     let api_key = dotenv::var("API_KEY").expect("API_KEY is not set");
 
@@ -86,13 +83,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let prices = resp.json::<CMCResponse>().await?;
 
-    if let Some(bitcoin) = prices.get_currency(currencies) {
+    if let Some(bitcoin) = prices.get_currency("ETH") {
         println!("{}", bitcoin);
     } else {
-        println!("{} is not in the list.", currencies);
+        println!("Ethereum is not in the list.");
     }
 
     Ok(())
 }
-
-//To get the terminal to run the app, type: "cargo run -- -c ETH"
